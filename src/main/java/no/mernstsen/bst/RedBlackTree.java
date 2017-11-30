@@ -207,16 +207,24 @@ public class RedBlackTree<E> {
             // this count is equal to the present count.
             if ((node.left == nil) || (node.right == nil)) {
                 int blackCount = node.red ? 1 : 2;
-                if (verifyBlackDescendantCount(blackDescendantCounter, node, blackCount)) {
+
+                // Verify black count for leaf node
+                blackDescendantCounter.putIfAbsent(node, blackCount);
+                if (!blackDescendantCounter.get(node).equals(blackCount)) {
+                    System.out.println("Tree invalid: descendant paths have different number of black nodes.");
                     return false;
                 }
 
                 if (node != root) {
+                    // Verify black count for all ancestors to the leaf node
                     for (Node ancestor = node.parent; ancestor != nil; ancestor = ancestor.parent) {
                         if (!ancestor.red) {
                             blackCount++;
                         }
-                        if (verifyBlackDescendantCount(blackDescendantCounter, ancestor, blackCount)) {
+
+                        blackDescendantCounter.putIfAbsent(ancestor, blackCount);
+                        if (!blackDescendantCounter.get(ancestor).equals(blackCount)) {
+                            System.out.println("Tree invalid: descendant paths have different number of black nodes.");
                             return false;
                         }
                     }
@@ -231,20 +239,5 @@ public class RedBlackTree<E> {
             }
         }
         return true;
-    }
-
-    /**
-     * TODO: this got refactored to end up with "inverse" logic. Fix.
-     */
-    private boolean verifyBlackDescendantCount(Map<Node, Integer> blackDescendantCounter, Node node, int blackCount) {
-        if (blackDescendantCounter.containsKey(node)) {
-            if (!blackDescendantCounter.get(node).equals(blackCount)) {
-                System.out.println("Tree invalid: descendant paths have different number of black nodes.");
-                return true;
-            }
-        } else {
-            blackDescendantCounter.put(node, blackCount);
-        }
-        return false;
     }
 }

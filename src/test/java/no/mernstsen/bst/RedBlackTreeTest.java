@@ -48,4 +48,19 @@ class RedBlackTreeTest {
         rbTree.add(77);
         assertEquals(1, rbTree.size());
     }
+
+    @Test
+    void validateTreeStructure() {
+        rbTree.add(5);
+        rbTree.add(50);
+        rbTree.add(-1);
+        rbTree.add(-5);
+        rbTree.add(234);
+        rbTree.add(17);
+        rbTree.add(47);
+        rbTree.add(48);
+        rbTree.add(49);
+        rbTree.add(15);
+        assertTrue(rbTree.isValidRedBlackTree());
+    }
 }
