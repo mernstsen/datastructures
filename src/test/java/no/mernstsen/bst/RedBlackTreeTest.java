@@ -3,6 +3,7 @@ package no.mernstsen.bst;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.Comparator;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -13,6 +14,14 @@ class RedBlackTreeTest {
     @BeforeEach
     void init() {
         rbTree = new RedBlackTree<>(Comparator.comparingInt(Integer::intValue));
+    }
+
+    Integer[] makeSmallTree() {
+        Integer[] numbers = {5, 50, -1, -5, 234, 17, 47, 48, 49, 15, 0};
+        for (Integer n : numbers) {
+            rbTree.add(n);
+        }
+        return numbers;
     }
 
     @Test
@@ -51,16 +60,14 @@ class RedBlackTreeTest {
 
     @Test
     void validateTreeStructure() {
-        rbTree.add(5);
-        rbTree.add(50);
-        rbTree.add(-1);
-        rbTree.add(-5);
-        rbTree.add(234);
-        rbTree.add(17);
-        rbTree.add(47);
-        rbTree.add(48);
-        rbTree.add(49);
-        rbTree.add(15);
+        makeSmallTree();
         assertTrue(rbTree.isValidRedBlackTree());
+    }
+
+    @Test
+    void minReturnsSmallestElement() {
+        Integer[] number = makeSmallTree();
+        Arrays.sort(number);
+        assertEquals(number[0], rbTree.min());
     }
 }

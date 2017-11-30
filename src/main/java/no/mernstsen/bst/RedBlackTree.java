@@ -148,6 +148,18 @@ public class RedBlackTree<E> {
         return false;
     }
 
+    public E min() {
+        if (size == 0) {
+            new NoSuchElementException();
+        }
+
+        Node node = root;
+        while (node.left != nil) {
+            node = node.left;
+        }
+        return node.key;
+    }
+
     public int size() {
         return size;
     }
