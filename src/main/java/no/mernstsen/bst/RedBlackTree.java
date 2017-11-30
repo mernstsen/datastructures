@@ -29,6 +29,10 @@ public class RedBlackTree<E> {
         this.comparator = comparator;
     }
 
+    /**
+     * Add key to the tree.
+     * @param e the key to add
+     */
     public void add(E e) {
         Node z = new Node(e, true);
         z.left = nil;
@@ -58,6 +62,7 @@ public class RedBlackTree<E> {
         insertFixup(z);
     }
 
+    /* Restore red-black properties after adding a node. */
     private void insertFixup(Node z) {
         while (z.parent.red) {
             if (z.parent == z.parent.parent.left) {
@@ -133,6 +138,12 @@ public class RedBlackTree<E> {
         y.parent = x;
     }
 
+    /**
+     * Test if the tree contains a key.
+     *
+     * @param e the key to test for
+     * @return true if the key is present, false otherwise
+     */
     public boolean contains(E e) {
         Node result = search(e);
         return result == null ? false : true;
