@@ -66,8 +66,47 @@ class RedBlackTreeTest {
 
     @Test
     void minReturnsSmallestElement() {
-        Integer[] number = makeSmallTree();
-        Arrays.sort(number);
-        assertEquals(number[0], rbTree.min());
+        Integer[] numbers = makeSmallTree();
+        Arrays.sort(numbers);
+        assertEquals(numbers[0], rbTree.min());
+    }
+
+    @Test
+    void removeElementInTreeReturnsTrue() {
+        Integer[] numbers = makeSmallTree();
+        boolean result = rbTree.remove(numbers[0]);
+        assertTrue(result);
+    }
+
+    @Test
+    void removeElementNotInTreeReturnsFalse() {
+        rbTree.add(4);
+        rbTree.add(3);
+        rbTree.add(2);
+        boolean result = rbTree.remove(18);
+        assertFalse(result);
+    }
+
+    @Test
+    void removeElementInTreeDecreasesSizeByOne() {
+        Integer[] numbers = makeSmallTree();
+        assertEquals(numbers.length, rbTree.size());
+        boolean result = rbTree.remove(numbers[0]);
+        assertEquals(numbers.length - 1, rbTree.size());
+    }
+
+    @Test
+    void removedElementIsNoLongerInTree() {
+        Integer[] numbers = makeSmallTree();
+        boolean result = rbTree.remove(numbers[0]);
+        assertFalse(rbTree.contains(numbers[0]));
+    }
+
+    @Test
+    void validateTreeStructureAfterRemoval() {
+        Integer[] numbers = makeSmallTree();
+        assertTrue(rbTree.isValidRedBlackTree());
+        boolean result = rbTree.remove(numbers[1]);
+        assertTrue(rbTree.isValidRedBlackTree());
     }
 }

@@ -134,10 +134,15 @@ public class RedBlackTree<E> {
     }
 
     public boolean contains(E e) {
+        Node result = search(e);
+        return result == null ? false : true;
+    }
+
+    private Node search(E e) {
         Node x = root;
         while (x != nil) {
             if (comparator.compare(e, x.key) == 0) {
-                return true;
+                return x;
             }
             if (comparator.compare(e, x.key) < 0) {
                 x = x.left;
@@ -145,19 +150,140 @@ public class RedBlackTree<E> {
                 x = x.right;
             }
         }
-        return false;
+        return null;
     }
 
+    /**
+     * Return the smallest key in the tree, or null if the key does not exist.
+     *
+     * @return the smallest key in the tree
+     */
     public E min() {
         return size == 0 ? null : treeMinimum(root).key;
     }
 
+    /* Return the smallest node from the subtree rooted at node. */
     private Node treeMinimum(Node node) {
         Node x = node;
         while (x.left != nil) {
             x = x.left;
         }
         return x;
+    }
+
+
+    /**
+     * Remove key e from the tree.
+     *
+     * @param e the key to be removed
+     * @return true if key was present in the tree, false otherwise
+     */
+    public boolean remove(E e) {
+        Node z = search(e);
+        if (z == null) {
+            return false;
+        }
+
+        Node y = z;
+        boolean yOriginalIsRed = y.red;
+        Node x;
+        if (z.left == nil) {
+            x = z.right;
+            transplant(z, z.right);
+        } else if (z.right == nil) {
+            x = z.left;
+            transplant(z, z.left);
+        } else {
+            y = treeMinimum(z.right);
+            yOriginalIsRed = y.red;
+            x = y.right;
+            if (y.parent == z) {
+                x.parent = y;
+            } else {
+                transplant(y, y.right);
+                y.right = z.right;
+                y.right.parent = y;
+            }
+            transplant(z, y);
+            y.left = z.left;
+            y.left.parent = y;
+            y.red = z.red;
+        }
+        if (!yOriginalIsRed) {
+            deleteFixup(x);
+        }
+
+        size--;
+        return true;
+    }
+
+    /* Restore red-black properties after deleting a node. */
+    private void deleteFixup(Node node) {
+        Node x = node;
+        while (x != root && x.red == false) {
+            if (x == x.parent.left) {
+                Node w = x.parent.right;
+                if (w.red) {
+                    w.red = false;
+                    x.parent.red = true;
+                    leftRotate(x.parent);
+                    w = x.parent.right;
+                }
+                if (!w.left.red && !w.right.red) {
+                    w.red = true;
+                    x = x.parent;
+                } else {
+                    if (!w.right.red) {
+                        w.left.red = false;
+                        w.red = true;
+                        rightRotate(w);
+                        w = x.parent.right;
+                    }
+                    w.red = x.parent.red;
+                    w.parent.red = false;
+                    w.right.red = false;
+                    leftRotate(x.parent);
+                    x = root;
+                }
+            } else {
+                Node w = x.parent.left;
+                if (w.red) {
+                    w.red = false;
+                    x.parent.red = true;
+                    rightRotate(x.parent);
+                    w = x.parent.left;
+                }
+                if (!w.left.red && !w.right.red) {
+                    w.red = true;
+                    x = x.parent;
+                } else {
+                    if (!w.left.red) {
+                        w.right.red = false;
+                        w.red = true;
+                        leftRotate(w);
+                        w = x.parent.left;
+                    }
+                    w.red = x.parent.red;
+                    w.parent.red = false;
+                    w.left.red = false;
+                    rightRotate(x.parent);
+                    x = root;
+                }
+            }
+        }
+        x.red = false;
+    }
+
+    /* Replace subtree rooted at u with subtree rooted at v. */
+    private void transplant(Node u, Node v) {
+        if (u.parent == nil) {
+            root = v;
+        } else if (u == u.parent.left) {
+            u.parent.left = v;
+        } else {
+            u.parent.right = v;
+        }
+        v.parent = u.parent;
     }
 
     public int size() {
