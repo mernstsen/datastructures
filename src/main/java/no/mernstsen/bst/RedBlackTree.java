@@ -133,6 +133,21 @@ public class RedBlackTree<E> {
         y.parent = x;
     }
 
+    public boolean contains(E e) {
+        Node x = root;
+        while (x != nil) {
+            if (comparator.compare(e, x.key) == 0) {
+                return true;
+            }
+            if (comparator.compare(e, x.key) < 0) {
+                x = x.left;
+            } else {
+                x = x.right;
+            }
+        }
+        return false;
+    }
+
     public int size() {
         return size;
     }
