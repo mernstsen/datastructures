@@ -154,6 +154,19 @@ public class RedBlackTree<E> {
     }
 
     /**
+     * Remove the smallest key from the tree and return it.
+     *
+     * @return the smallest key in the tree, or null if tree is empty
+     */
+    public E extractMin() {
+        E minKey = min();
+        if (minKey != null) {
+            remove(minKey);
+        }
+        return minKey;
+    }
+
+    /**
      * Return the smallest key in the tree, or null if the key does not exist.
      *
      * @return the smallest key in the tree

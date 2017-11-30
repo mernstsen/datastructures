@@ -109,4 +109,16 @@ class RedBlackTreeTest {
         boolean result = rbTree.remove(numbers[1]);
         assertTrue(rbTree.isValidRedBlackTree());
     }
+
+    @Test
+    void extractMinimumReturnsSmallestKey() {
+        Integer[] numbers = makeSmallTree();
+        Arrays.sort(numbers);
+        assertEquals(numbers.length, rbTree.size());
+        for (int i = 0; i < numbers.length; i++) {
+            Integer min = rbTree.extractMin();
+            assertEquals(numbers[i], min);
+            assertEquals(numbers.length - (i + 1), rbTree.size());
+        }
+    }
 }
