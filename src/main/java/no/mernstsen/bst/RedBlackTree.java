@@ -149,15 +149,15 @@ public class RedBlackTree<E> {
     }
 
     public E min() {
-        if (size == 0) {
-            new NoSuchElementException();
-        }
+        return size == 0 ? null : treeMinimum(root).key;
+    }
 
-        Node node = root;
-        while (node.left != nil) {
-            node = node.left;
+    private Node treeMinimum(Node node) {
+        Node x = node;
+        while (x.left != nil) {
+            x = x.left;
         }
-        return node.key;
+        return x;
     }
 
     public int size() {
